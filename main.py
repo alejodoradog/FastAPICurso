@@ -1,6 +1,10 @@
 from fastapi import FastAPI
 from datetime import datetime
 import zoneinfo
+from models import Customer, Transaction, Invoice
+    
+
+    
 
 app = FastAPI()
 country_timezones = {
@@ -24,4 +28,15 @@ async def time(iso_code: str):
     hora = datetime.now(tz)
     return {f"Hora en {timezone_Str}": f"la hora es {hora}"}
 
+@app.post("/customers")
+async def create_customer(customer_data: Customer):
+    return {"customer": customer_data}
 
+@app.post("/transactions")
+async def create_transaction(transaction_data: Transaction):
+    return {"transaction": transaction_data}
+
+@app.post("/invoices")
+async def create_invoice(invoice_data: Invoice):
+    return {"invoice": invoice_data}
+    
