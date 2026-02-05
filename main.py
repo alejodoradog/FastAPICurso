@@ -1,8 +1,8 @@
 from fastapi import FastAPI
 from datetime import datetime
 import zoneinfo
-from models import Customer, Transaction, Invoice
-    
+from models import Customer, CustomerCreate, Transaction, Invoice
+from db import SessionDep
 
     
 
@@ -28,9 +28,10 @@ async def time(iso_code: str):
     hora = datetime.now(tz)
     return {f"Hora en {timezone_Str}": f"la hora es {hora}"}
 
-@app.post("/customers")
-async def create_customer(customer_data: Customer):
-    return {"customer": customer_data}
+@app.post("/customers",response_model=Customer)
+async def create_customer(customer_data: CustomerCreate, session: SessionDep):
+    customer = Customer.model_validate(customer_data.model_dump())
+    return {"customer": customer}
 
 @app.post("/transactions")
 async def create_transaction(transaction_data: Transaction):
@@ -39,4 +40,8 @@ async def create_transaction(transaction_data: Transaction):
 @app.post("/invoices")
 async def create_invoice(invoice_data: Invoice):
     return {"invoice": invoice_data}
-    
+
+
+@app.get("/customers",response_model=list[Customer])
+async def get_customers():
+    return [Customer(id=1,name="Alejandro",description="inge",age=23,email="[EMAIL_ADDRESS]")]

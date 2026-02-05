@@ -1,11 +1,18 @@
 from pydantic import BaseModel
+from sqlmodel import SQLModel
 
-class Customer(BaseModel):
-    id: int
+class CustomeBase(SQLModel):
     name: str
     description: str | None
     age: int
     email: str
+
+class CustomerCreate(CustomeBase):
+    pass
+
+class Customer(SQLModel, table = True):
+    id: int|None = None
+
 
 class Transaction(BaseModel):
     id: int
